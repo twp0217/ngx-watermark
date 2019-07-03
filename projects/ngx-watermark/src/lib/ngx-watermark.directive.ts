@@ -1,12 +1,15 @@
-import { Directive, Input, Renderer2, ElementRef } from '@angular/core';
+import { Directive, Input, Renderer2, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { WatermarkOptions } from './interface';
 
 @Directive({
   // tslint:disable-next-line: directive-selector
   selector: '[watermark]'
 })
-export class NgxWatermarkDirective {
-  defaultOptions: WatermarkOptions = {
+export class NgxWatermarkDirective implements OnChanges {
+  @Input() watermarkOptions: WatermarkOptions;
+  @Input() showWatermark: boolean = true;
+
+  readonly DEFAULT_OPTIONS: WatermarkOptions = {
     text: '@twp0217/ngx-watermark',
     width: 200,
     height: 80,
@@ -16,25 +19,43 @@ export class NgxWatermarkDirective {
     degree: 15
   };
 
-  @Input()
-  set watermarkOptions(watermarkOptions: WatermarkOptions) {
-    this.loadWatermark(watermarkOptions);
-  }
-
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
-  loadWatermark(watermarkOptions: WatermarkOptions): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.watermarkOptions && changes.showWatermark) {
+      if (this.showWatermark) {
+        this.loadWatermark();
+      }
+    } else {
+      if (changes.watermarkOptions) {
+        this.loadWatermark();
+      }
+      if (changes.showWatermark) {
+        if (this.showWatermark) {
+          this.loadWatermark();
+        } else {
+          this.removeWatermark();
+        }
+      }
+    }
+  }
+
+  loadWatermark(): void {
     this.renderer.setStyle(
       this.el.nativeElement,
-      'background',
-      `url(${this.canvasToDataURL(watermarkOptions)})`
+      'background-image',
+      `url(${this.canvasToDataURL(this.watermarkOptions)})`
     );
   }
 
-  canvasToDataURL(watermarkOptions: WatermarkOptions): string {
+  removeWatermark(): void {
+    this.renderer.removeStyle(this.el.nativeElement, 'background-image');
+  }
+
+  private canvasToDataURL(watermarkOptions: WatermarkOptions): string {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    const options: WatermarkOptions = Object.assign({}, this.defaultOptions, watermarkOptions);
+    const options: WatermarkOptions = Object.assign({}, this.DEFAULT_OPTIONS, watermarkOptions);
     const width = options.width;
     const height = options.height;
 

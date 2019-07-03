@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { WatermarkOptions } from '@twp0217/ngx-watermark/public-api';
+import { WatermarkOptions } from '@twp0217/ngx-watermark';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +7,8 @@ import { WatermarkOptions } from '@twp0217/ngx-watermark/public-api';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  showWatermark: boolean = true;
+
   watermarkOptions: WatermarkOptions = {
     text: '@twp0217/ngx-watermark',
     width: 200,
