@@ -1,4 +1,5 @@
 # ngx-watermark
+
 A watermark component for Angular (基于Angular的水印组件)
 
 ## 安装
@@ -39,10 +40,14 @@ export class AppModule { }
 <div watermark [watermarkOptions]="watermarkOptions"></div>
 ```
 
-# 文档
-- `watermarkOptions` - `WatermarkOptions` - 配置信息
+## API
 
-# 支持
+名称 | 说明 | 类型 | 默认值
+---|---|---|---
+`[watermarkOptions]`| 配置信息 | WatermarkOptions | - 
+`[showWatermark]`| 是否显示水印 | boolean | true 
+
+## 支持
 
 - 如果项目对你有帮助，请点颗星:star:，谢谢。
 - 如果你对项目有想法、问题、BUG，欢迎讨论。
